@@ -268,9 +268,18 @@ void Node<T>::preOrder(std::stringstream &aux) const {
 template <class T>
 uint Node<T>::leaves() const {
 	//TO DO
-	return 0;
+  int counter = 0;
+  if(left != NULL){
+    counter += left->leaves();
+  }
+  if(right != NULL){
+    counter += right->leaves();
+  }
+  if(left == NULL && right == NULL) 
+        counter++;       
+  
+  return counter;
 }
-
 // =================================================================
 // Returns the depth of the node. Remember that the depth of a node
 // is defined as the greater depth of both children plus 1. If it is
