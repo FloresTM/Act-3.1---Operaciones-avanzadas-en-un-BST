@@ -1,8 +1,8 @@
 // =================================================================
 //
 // File: bst.h
-// Author:
-// Date:
+// Author: Sebastian Flores
+// Date: 10/28/2022
 //
 // =================================================================
 #ifndef BST_H
@@ -13,6 +13,7 @@
 #include <string>
 #include "exception.h"
 #include "header.h"
+#include <queue>
 
 template <class T> class BST;
 
@@ -280,6 +281,7 @@ uint Node<T>::leaves() const {
   
   return counter;
 }
+
 // =================================================================
 // Returns the depth of the node. Remember that the depth of a node
 // is defined as the greater depth of both children plus 1. If it is
@@ -289,8 +291,19 @@ uint Node<T>::leaves() const {
 // =================================================================
 template <class T>
 uint Node<T>::depth() const {
-	//TO DO
-	return 0;
+	// TO DO
+  if(left == NULL && right == NULL) 
+    return 1; 
+
+  int leftDepth = left->depth();
+  int rightDepth = right->depth();
+  
+  if (leftDepth > rightDepth)
+    return leftDepth + 1;
+  else
+    return rightDepth + 1;
+  
+	// return 0;
 }
 
 // =================================================================
@@ -303,7 +316,20 @@ uint Node<T>::depth() const {
 template <class T>
 bool Node<T>::isFull() const {
 	//TO DO
-	return false;
+  if (left == NULL && right == NULL)
+    return true;
+
+  if(left != NULL && right != NULL){
+    
+    if (left->depth() == right->depth()){
+      return true;
+    }
+    else
+      return false;
+  }
+    
+  else
+	  return false;
 }
 
 // =================================================================
@@ -316,6 +342,8 @@ bool Node<T>::isFull() const {
 template <class T>
 T Node<T>::ancestor(T val) const {
 	//TO DO
+  
+  
 	return T();
 }
 
@@ -500,6 +528,34 @@ std::string BST<T>::byLevel() const {
 	aux << "[";
 	if (!empty()) {
 		// TO DO
+    Node<T> *_root;
+    std::queue<Node<T>*>qtemp;
+    qtemp.push(root);
+    qtemp.push(NULL);
+    
+
+    while(!qtemp.empty()){
+      _root = qtemp.front();
+
+      if(_root != NULL){
+        aux << _root->value << " ";
+
+        if(_root->left != NULL){
+          qtemp.push(_root->left);
+        }
+        if(_root->right != NULL){
+          qtemp.push(_root->right);
+        }
+        qtemp.pop();
+      }
+      else if(_root == NULL){
+        qtemp.pop();
+        if(qtemp.front() != NULL && qtemp.back() != NULL){
+          qtemp.push(NULL);
+        }
+      }
+    }
+    
 	}
 	aux << "]";
 	return aux.str();
@@ -550,6 +606,6 @@ T BST<T>::ancestor(T val) const {
 		throw NoSuchElement();
 	}
 
-	return root->ancestor(val);
+	return ancestor(val);
 }
 #endif /* BST_H */
