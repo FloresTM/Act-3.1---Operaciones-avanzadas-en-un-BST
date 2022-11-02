@@ -195,7 +195,7 @@ void Node<T>::remove(T val) {
 
 // =================================================================
 // Removes, recursively, the childs of a parent node.
-//
+// 
 // =================================================================
 template <class T>
 void Node<T>::removeChilds() {
@@ -292,16 +292,20 @@ uint Node<T>::leaves() const {
 template <class T>
 uint Node<T>::depth() const {
 	// TO DO
-  if(left == NULL && right == NULL) 
-    return 1; 
+  if(left == NULL && right == NULL){
+     return 1; 
+    }
 
-  int leftDepth = left->depth();
-  int rightDepth = right->depth();
-  
-  if (leftDepth > rightDepth)
-    return leftDepth + 1;
-  else
-    return rightDepth + 1;
+  else {
+    int leftDepth = left->depth();
+    int rightDepth = right->depth();
+      
+    if (leftDepth > rightDepth){
+      return leftDepth + 1;
+    }
+      else
+        return rightDepth + 1;
+  }
   
 	// return 0;
 }
@@ -319,17 +323,13 @@ bool Node<T>::isFull() const {
   if (left == NULL && right == NULL)
     return true;
 
-  if(left != NULL && right != NULL){
-    
-    if (left->depth() == right->depth()){
-      return true;
+  if ((left != NULL) && (right != NULL)){
+    return (left->isFull() && right->isFull());
     }
-    else
-      return false;
-  }
     
   else
 	  return false;
+  
 }
 
 // =================================================================
@@ -342,9 +342,21 @@ bool Node<T>::isFull() const {
 template <class T>
 T Node<T>::ancestor(T val) const {
 	//TO DO
+  if (left != NULL && left->right != NULL) {
+		Node<T> *parent, *child;
+		parent = left;
+		child = left->right;
+
+		while (child->right != NULL) {
+			parent = child;
+			child = child->right;
+		}
+		parent->right = child->left;
+		child->left = NULL;
+		return parent;
+	}
   
-  
-	return T();
+	//return T();
 }
 
 // =================================================================
